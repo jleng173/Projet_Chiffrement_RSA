@@ -10,8 +10,9 @@ public class main {
 		BigInteger e = BigInteger.valueOf(7);
 		BigInteger m = BigInteger.valueOf(4992);
 		
-		PrivateKey pk = new PrivateKey(e,m);
+		PrivateKey pk = new PrivateKey(p.get_e(),p.get_m(),clePublic.getX());
 		pk.CreationKey();
+		Key clePrive = pk.getPKey();
 	}
 
 }
