@@ -8,19 +8,13 @@ public class main {
 		PublicKey p = new PublicKey();
 		Key clePublic = new Key(p.get_n(),p.get_e());
 		
-		BigInteger e = BigInteger.valueOf(7);
-		BigInteger m = BigInteger.valueOf(4992);
+		BigInteger e = BigInteger.valueOf(101);
+		BigInteger m = BigInteger.valueOf(2320);
 		
 		PrivateKey pk = new PrivateKey(p.get_e(),p.get_m(),clePublic.getX());
 		pk.CreationKey();
 		Key clePrive = pk.getPKey();
-//		Key clePublic = new Key(p.get_n(),p.get_e());
-//		
-//		BigInteger e = BigInteger.valueOf(7);
-//		BigInteger m = BigInteger.valueOf(4992);
-//		
-//		PrivateKey pk = new PrivateKey(e,m);
-//		pk.CreationKey();
+
 //		char car = 'B';
 //		int ascii = (int) car;
 //		p.convert_ascii("Bonjour !");

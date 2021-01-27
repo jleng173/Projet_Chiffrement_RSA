@@ -34,8 +34,8 @@ public class PrivateKey {
 		v = BigInteger.ONE;
 		BigInteger vmoins1 = BigInteger.ZERO;
 		
-//		System.out.println(i+"   r-1: "+rmoins1.intValue()+ "   u-1: "+umoins1.intValue()+ "   v-1: "+vmoins1.intValue());
-//		System.out.println(i+"     r: "+r.intValue()+ "   u: "+u.intValue()+ "   v: "+v.intValue());
+		System.out.println(i+"   r-1: "+rmoins1.longValueExact()+ "   u-1: "+umoins1.longValueExact()+ "   v-1: "+vmoins1.longValueExact());
+		System.out.println(i+"     r: "+r.longValueExact()+ "   u: "+u.longValueExact()+ "   v: "+v.longValueExact());
 		
 		BigInteger tmp;
 		
@@ -53,37 +53,53 @@ public class PrivateKey {
 			r = rmoins1.subtract((rmoins1.divide(r)).multiply(r));
 			rmoins1 = tmp;
 			
-//			System.out.println(i+"   r-1: "+rmoins1.longValueExact()+ "   u-1: "+umoins1.longValueExact()+ "   v-1: "+vmoins1.longValueExact());
-//			System.out.println(i+"     r: "+r.longValueExact()+ "   u: "+u.longValueExact()+ "   v: "+v.longValueExact());
-
+			System.out.println(i+"   r-1: "+rmoins1.longValueExact()+ "   u-1: "+umoins1.longValueExact()+ "   v-1: "+vmoins1.longValueExact());
+			System.out.println(i+"     r: "+r.longValueExact()+ "   u: "+u.longValueExact()+ "   v: "+v.longValueExact());
+			
 		}
 		
 		//System.out.println("Condition  < 2 "+(u.compareTo(BigInteger.valueOf(2))==-1) +"   >m "+ (u.compareTo(m)==1));
 		
 		//Vérifie que 2 < u < m
+
+		
+		System.out.println("   r: "+r.longValueExact()+ "   u: "+u.longValueExact()+ "   v: "+v.longValueExact());
+	}
+
+	public void CreationKey() {
+		AlgoEuclide();
+		
 		if (u.compareTo(BigInteger.valueOf(2))==-1 || u.compareTo(m)==1) {
-			long k = -1;
+			long k = -0;
 			BigInteger compare;
 			BigInteger mul;
 			do {
 				mul =  m.multiply(BigInteger.valueOf(k));
 				compare = u.subtract(mul);
 				k--;
-				//System.out.println(compare.longValueExact());
-			}while( compare.compareTo(BigInteger.valueOf(2))==-1 );
-			u = compare;
+				System.out.println("        "+compare.longValueExact());
+				System.out.println((compare.compareTo(BigInteger.valueOf(2))==-1)+"    "+ (compare.compareTo(m)==1));
+			}while( compare.compareTo(BigInteger.valueOf(2))==-1 || compare.compareTo(m)==1);
+			//u = compare;
 		}
 		
-		System.out.println("   r: "+r.intValue()+ "   u: "+u.intValue()+ "   v: "+v.intValue());
-	}
-
-	public void CreationKey() {
-		AlgoEuclide();
-		if ( ((e.multiply(u)).add(m.multiply(v))).compareTo(e.gcd(m))==0) {
-			if ( ((e.multiply(u)).add(m.multiply(v))).compareTo(BigInteger.ONE)==0) {
-				if (u.compareTo(BigInteger.valueOf(2))==-1 || u.compareTo(m)==1) {
+		BigInteger e_u = e.multiply(u);
+		BigInteger m_v = m.multiply(v);
+		BigInteger eu_mv = e_u.add(m_v).add(BigInteger.ONE);
+		
+		System.out.println("1 "+ eu_mv.longValueExact() +"  "+e.gcd(m));
+		
+		if ( (eu_mv).compareTo(e.gcd(m))==0) {
+			
+			System.out.println("2 "+BigInteger.ONE.longValueExact());
+			
+			if ( (eu_mv).compareTo(BigInteger.ONE)==0) {
+				System.out.println("3");
+				if (!(u.compareTo(BigInteger.valueOf(2))==-1) && !(u.compareTo(m)==1)) {
+					System.out.println("key");
 					Pkey = new Key(n,u);
-				}	
+					
+				}
 			}
 		}
 		
