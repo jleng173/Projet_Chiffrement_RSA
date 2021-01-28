@@ -17,7 +17,6 @@ public class main {
 	
 		
 		PrivateKey pk = new PrivateKey(clePublic.getY(),p.get_m(),clePublic.getN());
-		pk.CreationKey();
 		Key clePrive = pk.getPKey();
 		
 		ArrayList<BigInteger> phrase = Cryptage.convert_ascii("Bonjour !");
