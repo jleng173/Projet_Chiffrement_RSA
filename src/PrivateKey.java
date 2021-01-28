@@ -5,6 +5,7 @@ public class PrivateKey {
 	//Coefficient de Bézout
 	private BigInteger u;
 	private BigInteger v;
+	BigInteger umoins1;
 	
 	//indicatrice d'Euler
 	private BigInteger e;
@@ -29,7 +30,7 @@ public class PrivateKey {
 		BigInteger rmoins1 = e;
 		
 		u = BigInteger.ZERO;
-		BigInteger umoins1 = BigInteger.ONE;
+		umoins1 = BigInteger.ONE;
 		
 		v = BigInteger.ONE;
 		BigInteger vmoins1 = BigInteger.ZERO;
@@ -62,16 +63,17 @@ public class PrivateKey {
 		
 		//Vérifie que 2 < u < m
 
-		
+		//u = u.subtract(BigInteger.valueOf(713));
 		System.out.println("   r: "+r.longValueExact()+ "   u: "+u.longValueExact()+ "   v: "+v.longValueExact());
 	}
 
 	public void CreationKey() {
 		AlgoEuclide();
 		
+		BigInteger compare = u;
 		if (u.compareTo(BigInteger.valueOf(2))==-1 || u.compareTo(m)==1) {
 			long k = -0;
-			BigInteger compare;
+			
 			BigInteger mul;
 			do {
 				mul =  m.multiply(BigInteger.valueOf(k));
@@ -80,7 +82,7 @@ public class PrivateKey {
 				System.out.println("        "+compare.longValueExact());
 				System.out.println((compare.compareTo(BigInteger.valueOf(2))==-1)+"    "+ (compare.compareTo(m)==1));
 			}while( compare.compareTo(BigInteger.valueOf(2))==-1 || compare.compareTo(m)==1);
-			//u = compare;
+			
 		}
 		
 		BigInteger e_u = e.multiply(u);
@@ -95,8 +97,18 @@ public class PrivateKey {
 			
 			if ( (eu_mv).compareTo(BigInteger.ONE)==0) {
 				System.out.println("3");
+				
+				u = compare;
 				if (!(u.compareTo(BigInteger.valueOf(2))==-1) && !(u.compareTo(m)==1)) {
-					System.out.println("key");
+					System.out.println("key privée générée");
+					
+					if (u.compareTo(BigInteger.valueOf(2))==-1 || u.compareTo(m)==1) {
+						
+						u = u.subtract(umoins1);
+					}else {
+						u = u.add(umoins1);
+					}
+					System.out.println("   u a la fin : "+u.longValueExact());
 					Pkey = new Key(n,u);
 					
 				}

@@ -56,4 +56,8 @@ public class PublicKey {
 	public void setE(BigInteger e) {
 		this.e = e;
 	}
+	
+	public void setM(BigInteger m) {
+		this.m = m;
+	}
 }
