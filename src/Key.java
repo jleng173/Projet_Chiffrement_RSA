@@ -2,21 +2,21 @@ import java.math.BigInteger;
 
 public class Key {
 	
-	private BigInteger x;
-	private BigInteger y;
+	private BigInteger n;
+	private BigInteger y; // correspond au e pour PublicKey, au u pour PrivateKey
 	
 	public Key (BigInteger v1, BigInteger v2) {
-		this.x = v1;
+		this.n = v1;
 		this.y = v2;
 	}
 	
 
-	public BigInteger getX() {
-		return x;
+	public BigInteger getN() {
+		return n;
 	}
 
-	public void setX(BigInteger x) {
-		this.x = x;
+	public void setN(BigInteger x) {
+		this.n = x;
 	}
 
 	public BigInteger getY() {

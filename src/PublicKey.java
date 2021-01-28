@@ -28,26 +28,7 @@ public class PublicKey {
 		return p.equals(q);
 	}
 	
-	//Première étape
-	public ArrayList<BigInteger> convert_ascii(String s){
-		ArrayList<BigInteger> asciiList = new ArrayList<BigInteger>();
-		char[] characters = s.toCharArray();
-		for(char c : characters) {
-			asciiList.add(BigInteger.valueOf((long) c));
-		}
 
-		return asciiList;
-	}
-	
-	//Seconde étape
-	public ArrayList<BigInteger> chiffrement(ArrayList<BigInteger> asciiList){
-		ArrayList<BigInteger> chiffreList = new ArrayList<BigInteger>();
-		for(BigInteger c: asciiList) {
-			BigInteger Si = c.modPow(e, n);
-			chiffreList.add(Si);
-		}
-		return chiffreList;
-	}
 	
 	public void create_public_keys() {
 		BigInteger maxValue = new BigInteger("500000");
