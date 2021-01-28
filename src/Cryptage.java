@@ -35,7 +35,7 @@ public class Cryptage {
 	public static String ascii_to_string(ArrayList<BigInteger> asciiList ){
 		String s ="";
 		for(BigInteger ascii : asciiList) {
-			int n = ascii.intValueExact();
+			long n = ascii.longValueExact();
 			char ch = (char) n;
 			s+=ch;
 		}
