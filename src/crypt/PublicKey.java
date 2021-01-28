@@ -1,3 +1,4 @@
+package crypt;
 import java.math.BigInteger;
 import java.util.Random;
 
@@ -10,7 +11,14 @@ public class PublicKey {
 	public PublicKey() {
 		create_public_keys();
 	}
-	
+
+	public PublicKey(BigInteger e, BigInteger n, BigInteger m) {
+		super();
+		this.n = n;
+		this.m = m;
+		this.e = e;
+	}
+
 	public BigInteger get_n() {
 		return n;
 	}
