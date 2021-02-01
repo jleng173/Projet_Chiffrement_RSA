@@ -11,6 +11,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
+import crypt.Cryptage;
+import crypt.Key;
 import crypt.PrivateKey;
 import crypt.PublicKey;
 
@@ -22,11 +24,16 @@ public class ServThread implements Runnable{
 	private Socket socket;
 	private BufferedReader entree;
 	private PrintWriter sortie;
+	
 
 	private PublicKey pb_key;
 	private PrivateKey pv_key;
-	private PublicKey pb_key_client;
+	private Key pb_key_client;
+	private Key pv_key_server;
 	
+	
+	ArrayList<BigInteger> message_chiffre;
+
 	public ServThread(ServerSocket ecoute) {
 		try {
 			socket = ecoute.accept();
@@ -40,31 +47,56 @@ public class ServThread implements Runnable{
 	public synchronized void run() {
 		pb_key = new PublicKey();
 		pv_key = new PrivateKey(pb_key.get_e(), pb_key.get_m(), pb_key.get_n());
+		pv_key_server = pv_key.getPKey();
 		System.out.println("My pbkey = " + pb_key.get_e() + " " + pb_key.get_n() + " " + pb_key.get_m());
 		try {
 			entree = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			sortie = new PrintWriter(socket.getOutputStream(), true);
+			
 			//Envoie de la clé
 			ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
 			ArrayList<BigInteger> elementList = new ArrayList<BigInteger>();
-			elementList.add(pb_key.get_e());
 			elementList.add(pb_key.get_n());
-			elementList.add(pb_key.get_m());
+			elementList.add(pb_key.get_e());
+//			elementList.add(pb_key.get_m());
 			oos.writeObject(elementList);
+			
 			//Réception clé publique client
 			ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
 			ArrayList<BigInteger> elementListServer = (ArrayList<BigInteger>) ois.readObject();
 			boolean isRunning = true;
-			pb_key_client = new PublicKey(elementListServer.get(0), elementListServer.get(1), elementListServer.get(2));
-			System.out.println("PbKeyClient = " + pb_key_client.get_e() + " " + pb_key_client.get_n() + " " + pb_key_client.get_m());
+			pb_key_client = new Key(elementListServer.get(0), elementListServer.get(1));
+			System.out.println("PbKeyClient = n:" + pb_key_client.getN() + " e:" + pb_key_client.getY());
+			
+			//String chaine = entree.readLine();
+			//System.out.println(chaine);
+			
+			String message_claire;
+			
+			//Récupération message crypté et déchiffrement
+			ois = new ObjectInputStream(socket.getInputStream());
+			ArrayList<BigInteger> message_chiffre = (ArrayList<BigInteger>)ois.readObject();
+			ArrayList<BigInteger> message_ascii = crypt.Cryptage.dechiffrement(message_chiffre, pv_key_server);
+			message_claire = crypt.Cryptage.ascii_to_string(message_ascii);
+			System.out.println(message_claire);
+			
+			//Envoi message crypté
+			oos = new ObjectOutputStream(socket.getOutputStream());
+			ArrayList<BigInteger> phrase = Cryptage.convert_ascii(message_claire);
+			ArrayList<BigInteger> texte_chiffre = crypt.Cryptage.chiffrement(phrase, pb_key_client);
+			oos.writeObject(texte_chiffre);
+			
+			while (isRunning) {
+				
+
+			}
+			
 		} catch (IOException | ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		while (isRunning) {
-			
-		}
+
 		
 	}
 	
