@@ -43,7 +43,7 @@ public class ClientRSA {
 			sortie = new PrintWriter(socket.getOutputStream(), true);
 			entree = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			String message = "message a crypter";
-			String message_claire = "message a crypter";
+			String message_claire = "";
 			
 
 			//Envoi clé publique
@@ -59,27 +59,38 @@ public class ClientRSA {
 			ArrayList<BigInteger> elementListServer = (ArrayList<BigInteger>) ois.readObject();
 			boolean isRunning = true;
 			pb_key_server = new Key(elementListServer.get(0), elementListServer.get(1));
-			System.out.println("PBkeyServer = n:" + pb_key_server.getN() + " e:" + pb_key_server.getY() + " ");
+			System.out.println("PBkeyServer = n:" + pb_key_server.getN() + " e:" + pb_key_server.getY() + "\n");
 			
 			//sortie.println("test client");
 			
-			//Envoi message crypté
-			oos = new ObjectOutputStream(socket.getOutputStream());
-			ArrayList<BigInteger> phrase = Cryptage.convert_ascii(message);
-			ArrayList<BigInteger> texte_chiffre = crypt.Cryptage.chiffrement(phrase, pb_key_server);
-			oos.writeObject(texte_chiffre);
-			
-			
-			ois = new ObjectInputStream(socket.getInputStream());
-			ArrayList<BigInteger> message_chiffre = (ArrayList<BigInteger>)ois.readObject();
-			ArrayList<BigInteger> message_ascii = crypt.Cryptage.dechiffrement(message_chiffre, pv_key_client);
-			message_claire = crypt.Cryptage.ascii_to_string(message_ascii);
-			System.out.println(message_claire);
-			
+			Scanner sc = new Scanner(System.in);			
 			while (isRunning) {
-				
-	
 
+				System.out.println("Veuillez rentrer votre message:");
+
+				message = sc.next();
+				//Envoi message crypté
+				
+				if(message.matches("exit"))
+				{
+					isRunning = false;
+					oos = new ObjectOutputStream(socket.getOutputStream());
+					ArrayList<BigInteger> phrase = Cryptage.convert_ascii(message);
+					ArrayList<BigInteger> texte_chiffre = crypt.Cryptage.chiffrement(phrase, pb_key_server);
+					oos.writeObject(texte_chiffre);
+				}
+				else {
+					oos = new ObjectOutputStream(socket.getOutputStream());
+					ArrayList<BigInteger> phrase = Cryptage.convert_ascii(message);
+					ArrayList<BigInteger> texte_chiffre = crypt.Cryptage.chiffrement(phrase, pb_key_server);
+					oos.writeObject(texte_chiffre);
+					
+					ois = new ObjectInputStream(socket.getInputStream());
+					ArrayList<BigInteger> message_chiffre = (ArrayList<BigInteger>)ois.readObject();
+					ArrayList<BigInteger> message_ascii = crypt.Cryptage.dechiffrement(message_chiffre, pv_key_client);
+					message_claire = crypt.Cryptage.ascii_to_string(message_ascii);
+					System.out.println(message_claire + "\n");
+				}
 			}
 			
 		} catch (IOException | ClassNotFoundException e) {
